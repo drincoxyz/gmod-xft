@@ -38,6 +38,40 @@ cvars.AddChangeCallback("xft_max_speed", function(cvar, old, new)
 	RunConsoleCommand("_xft_max_speed_sqr", tostring(tonumber(new)^2))
 end, "Default")
 
+--
+-- This will disable collision between all players
+--
+hook.Add("ShouldCollide", "XFTPlayers", function(ent1, ent2)
+	if ent1:IsPlayer() and ent2:IsPlayer() then
+		return false
+	end
+end)
+
+--
+-- This will push players away from each other when they're inside each other
+--
+hook.Add("Move", "XFTPlayerPush", function(pl, mv)
+	if mv:GetForwardSpeed() ~= 0 or mv:GetSideSpeed() ~= 0 then return end
+	if not pl:Alive() or pl:GetObserverMode() ~= OBS_MODE_NONE then return end
+
+	local pos = mv:GetOrigin()
+	local mins, maxs = pl:GetCollisionBounds()
+	local tr = util.TraceHull {
+		start = pos,
+		endpos = pos,
+		mins = mins,
+		maxs = maxs,
+		filter = pl,
+	}
+	
+	if not tr.Hit or not IsValid(tr.Entity) or not tr.Entity:IsPlayer() or not tr.Entity:Alive() or tr.Entity:GetObserverMode() ~= OBS_MODE_NONE then return end
+	
+	local otherPos = tr.Entity:GetNetworkOrigin()
+	local dir = (pos - otherPos):GetNormalized() * Vector(1, 1, 0)
+	
+	mv:SetVelocity(mv:GetVelocity() + (dir * 8))
+end)
+
 function GM:Move(pl, mv)
 	local obsMode = pl:GetObserverMode()
 	

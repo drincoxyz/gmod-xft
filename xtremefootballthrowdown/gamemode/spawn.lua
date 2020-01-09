@@ -30,6 +30,7 @@ end)
 
 function GM:PlayerInitialSpawn(pl)
 	pl:SetTeam(TEAM_SPECTATE)
+	pl:SetCustomCollisionCheck(true)
 end
 
 function GM:PlayerSpawn(pl)
