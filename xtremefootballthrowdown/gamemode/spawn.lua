@@ -1,33 +1,5 @@
 GM.SpawnPoints = GM.SpawnPoints or {}
 
---
--- This should make EFT maps compatible by replacing the old `info_player_` spawnpoints with the
--- new `xft_player_spawn` ones and changing the team slots
---
-hook.Add("OnEntityCreated", "EFTSpawnPoints", function(ent)
-	local class = ent:GetClass()
-
-	if class:find "info_player_" then
-		local spawn = ents.Create "xft_player_spawn"
-		
-		if IsValid(spawn) then
-			timer.Simple(0, function()
-				spawn:SetPos(ent:GetPos())
-				spawn:SetAngles(ent:GetAngles())
-				spawn:SetParent(ent:GetParent())
-
-				if class == "info_player_blue" then
-					spawn:SetSlot(2)
-				elseif class == "info_player_red" then
-					spawn:SetSlot(1)
-				end
-				
-				spawn:Spawn()
-			end)
-		end
-	end
-end)
-
 function GM:PlayerInitialSpawn(pl)
 	pl:SetTeam(TEAM_SPECTATE)
 	pl:SetCustomCollisionCheck(true)

@@ -159,6 +159,13 @@ function meta:SetNextTeamSwitch(time)
 end
 
 --
+-- Returns the team slot of the player's current team
+--
+function meta:GetTeamSlot()
+	return GAMEMODE:GetTeamSlot(self:Team())
+end
+
+--
 -- Returns the next time a player can switch teams again
 --
 function meta:GetNextTeamSwitch()

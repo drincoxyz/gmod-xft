@@ -2,7 +2,6 @@ ENT.Type = "point"
 ENT.Slot = 0
 
 function ENT:Initialize()
-	self:SetSlot(self.Slot)
 	GAMEMODE:AddSpawnPoint(self)
 end
 

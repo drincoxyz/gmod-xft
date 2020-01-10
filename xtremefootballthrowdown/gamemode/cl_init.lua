@@ -9,6 +9,9 @@ include "hud.lua"
 
 -- Shared
 
+include "item.lua"
+include "state.lua"
+include "goal.lua"
 include "camera.lua"
 include "optimize.lua"
 include "teams.lua"
