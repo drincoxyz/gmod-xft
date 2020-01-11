@@ -1,3 +1,7 @@
+---------------
+-- Variables --
+---------------
+
 local botNames = {
 	"William",
 	"Brandon",
@@ -12,6 +16,10 @@ local botNames = {
 	"Jesse",
 	"Eric",
 }
+
+-------------
+-- ConVars --
+-------------
 
 CreateConVar("xft_bots", 1, FCVAR_NOTIFY)
 
@@ -28,6 +36,10 @@ concommand.Add("xft_bot_add" , function(pl, cmd, args, argStr)
 	
 	pl:Spawn()
 end)
+
+-----------
+-- Hooks --
+-----------
 
 hook.Add("StartCommand", "XFTBot", function(pl, cmd)
 	if not pl:IsBot() then return end

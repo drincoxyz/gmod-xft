@@ -1,3 +1,7 @@
+---------------
+-- Functions --
+---------------
+
 function GM:GetFallDamage(pl, speed)
 	local pos = pl:GetPos()
 	local vel = pl:GetVelocity()

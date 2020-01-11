@@ -1,4 +1,8 @@
-function GM:PlayerStepSoundTime(pl, step, walking)
+--
+-- Hooks
+--
+
+hook.Add("PlayerStepSoundTime", "xft_base", function(pl, step, walking)
 	if pl:Crouching() then
 		return 250
 	end
@@ -6,11 +10,11 @@ function GM:PlayerStepSoundTime(pl, step, walking)
 	local vel = pl:GetVelocity()
 	local speed = vel:Length2DSqr()
 	
-	if speed <= cvars.Number "_xft_strafe_speed_sqr" * 2 then
+	if speed <= GAMEMODE:GetStrafeSpeedSqr() then
 		return 300
-	elseif speed <= cvars.Number "_xft_charge_speed_sqr" then
+	elseif speed <= GAMEMODE:GetChargeSpeedSqr() then
 		return 250
 	end
 	
 	return 175
-end
+end)

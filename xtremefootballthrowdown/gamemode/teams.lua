@@ -1,12 +1,6 @@
---
--- Teams work a little differently in XFT than they did in EFT
---
--- For one, there can be more than two teams playing at the same time in a single map, provided
--- the map supports it
---
--- In addition, teams are managed on a slot-basis, meaning teams are assigned to sides at runtime,
--- as opposed to having just red and blue sides
---
+------------------
+-- Enumerations --
+------------------
 
 TEAM_SPECTATE = 0
 TEAM_RED      = 1
@@ -18,6 +12,10 @@ TEAM_DENY_INVALID  = 0
 TEAM_DENY_COOLDOWN = 1
 TEAM_DENY_ALREADY  = 2
 TEAM_DENY_INACTIVE = 3
+
+-------------
+-- Phrases --
+-------------
 
 if CLIENT then
 	GM:SetPhrase("team.joined", "en", "joined the")
@@ -35,6 +33,10 @@ if CLIENT then
 	GM:SetPhrase("team.deny.inactive", "en", "The % are inactive")
 	GM:SetPhrase("team.deny.inactive", "fr", "Les % sont inactives") -- % are inactive
 end
+
+-------------
+-- ConVars --
+-------------
 
 CreateConVar("xft_team_1", TEAM_RED, FCVAR_NOTIFY + FCVAR_REPLICATED)
 CreateConVar("xft_team_2", TEAM_BLUE, FCVAR_NOTIFY + FCVAR_REPLICATED)
@@ -67,23 +69,18 @@ cvars.AddChangeCallback("xft_team_4", function(cvar, old, new)
 	RunConsoleCommand("_xft_team_"..tostring(new), "4")
 end, "Default")
 
---
--- Assigns a given team to a given slot.
---
+---------------
+-- Functions --
+---------------
+
 function GM:SetTeam(slot, id)
 	RunConsoleCommand("xft_team_"..slot, tostring(id))
 end
 
---
--- Returns the team occupying a given slot.
---
 function GM:GetTeam(slot)
 	return cvars.Number("xft_team_"..slot)
 end
 
---
--- Returns the slot used by a given team.
---
 function GM:GetTeamSlot(id)
 	return cvars.Number("_xft_team_"..id)
 end
@@ -129,6 +126,11 @@ function GM:PlayerRequestTeam(pl, id)
 		return
 	end
 	
+	local item = pl:GetItem()
+	if IsValid(item) then
+		pl:DropItem()
+	end
+	
 	local old = pl:Team()
 	local cooldown = old == TEAM_SPECTATE and cvars.Number "xft_team_switch_cooldown_normal" or cvars.Number "xft_team_switch_cooldown_betrayal"
 	
@@ -149,32 +151,24 @@ function GM:OnPlayerChangedTeam(pl, old, new)
 	end
 end
 
+------------
+-- Player --
+------------
+
 local meta = FindMetaTable "Player"
 
---
--- Sets the next time a player can switch teams again
---
 function meta:SetNextTeamSwitch(time)
 	self:SetNW2Float("NextTeamSwitch", time)
 end
 
---
--- Returns the team slot of the player's current team
---
 function meta:GetTeamSlot()
 	return GAMEMODE:GetTeamSlot(self:Team())
 end
 
---
--- Returns the next time a player can switch teams again
---
 function meta:GetNextTeamSwitch()
 	return self:GetNW2Float "NextTeamSwitch"
 end
 
---
--- Returns true if a player can join the given team
---
 function meta:CanJoinTeam(id)
 	return GAMEMODE:PlayerCanJoinTeam(self, id)
 end

@@ -1,4 +1,8 @@
-function GM:CalcMainActivity(pl, vel)
+--
+-- Hooks
+--
+
+hook.Add("CalcMainActivity", "xft_base", function(pl, vel)
 	local act, seq = ACT_HL2MP_IDLE_ANGRY, -1
 	
 	if pl:OnGround() and not pl.WasOnGround then
@@ -14,7 +18,7 @@ function GM:CalcMainActivity(pl, vel)
 			else
 				local speed = vel:Length2DSqr()
 				
-				if speed > cvars.Number "_xft_charge_speed_sqr" then
+				if speed > GAMEMODE:GetChargeSpeedSqr() then
 					act = ACT_HL2MP_RUN_FAST
 				elseif speed > 0 then
 					act = ACT_HL2MP_RUN
@@ -28,4 +32,4 @@ function GM:CalcMainActivity(pl, vel)
 	pl.WasOnGround = pl:OnGround()
 	
 	return act, seq
-end
+end)

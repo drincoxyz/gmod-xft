@@ -1,4 +1,12 @@
+---------------
+-- Variables --
+---------------
+
 GM.SpawnPoints = GM.SpawnPoints or {}
+
+---------------
+-- Functions --
+---------------
 
 function GM:PlayerInitialSpawn(pl)
 	pl:SetTeam(TEAM_SPECTATE)
@@ -40,23 +48,14 @@ function GM:PlayerSpawn(pl)
 	end
 end
 
---
--- Adds a valid spawnpoint to the list of spawnpoints.
---
 function GM:AddSpawnPoint(ent)
 	table.insert(self.SpawnPoints, ent)
 end
 
---
--- Removes a spawnpoint from the list of spawnpoints.
---
 function GM:RemoveSpawnPoint(ent)
 	table.RemoveByValue(self.SpawnPoints, ent)
 end
 
---
--- Returns a list of all valid spawnpoints.
---
 function GM:GetSpawnPoints()
 	return self.SpawnPoints
 end

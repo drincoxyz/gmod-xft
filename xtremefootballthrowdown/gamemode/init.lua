@@ -1,10 +1,14 @@
--- Init
+----------
+-- Init --
+----------
 
 include      "shared.lua"
 AddCSLuaFile "shared.lua"
 AddCSLuaFile "cl_init.lua"
 
--- Server
+------------
+-- Server --
+------------
 
 include "bot.lua"
 include "eft.lua"
@@ -12,12 +16,16 @@ include "spawn.lua"
 include "damage.lua"
 include "autobalance.lua"
 
--- Client
+------------
+-- Client --
+------------
 
 AddCSLuaFile "language.lua"
 AddCSLuaFile "hud.lua"
 
--- Shared
+------------
+-- Shared --
+------------
 
 include      "item.lua"
 include      "state.lua"
@@ -28,6 +36,7 @@ include      "teams.lua"
 include      "movement.lua"
 include      "animation.lua"
 include      "footstep.lua"
+include      "playermodel.lua"
 AddCSLuaFile "item.lua"
 AddCSLuaFile "state.lua"
 AddCSLuaFile "goal.lua"
@@ -37,3 +46,4 @@ AddCSLuaFile "teams.lua"
 AddCSLuaFile "movement.lua"
 AddCSLuaFile "animation.lua"
 AddCSLuaFile "footstep.lua"
+AddCSLuaFile "playermodel.lua"

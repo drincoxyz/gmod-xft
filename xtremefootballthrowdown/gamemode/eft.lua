@@ -1,12 +1,6 @@
---
--- This provides compatibility for EFT maps to work properly in XFT
---
--- Pretty much every entity in EFT had its class name changed in XFT, since all entities are
--- prefixed with `xft_` for better organization
---
--- Becuase of this, every EFT-specific entity will be replaced with its XFT counterpart the moment
--- they're created, while attempting to preserve parenting, I/O etc
---
+-----------
+-- Hooks --
+-----------
 
 --
 -- Replace the old `info_player_` spawnpoints with the new `xft_player_spawn`

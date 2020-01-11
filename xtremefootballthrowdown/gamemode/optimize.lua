@@ -1,24 +1,17 @@
---
--- This is taken directly from JetBoom's EFT optimizations from `nixthelag.lua` and is
--- left unmodified (other than this comment block)
---
--- As far as I'm aware, these optimizations never caused any bugs and should theoretically help
--- performance a bit
---
+-----------
+-- Hooks --
+-----------
 
 hook.Add("Initialize", "XFTOptimize", function()
-	-- Horrible amount of cycle usage, especially on the server.
 	hook.Remove("PlayerTick", "TickWidgets")
 
 	if SERVER then
-		-- Forget what this is but probably retarded.
 		if timer.Exists("CheckHookTimes") then
 			timer.Remove("CheckHookTimes")
 		end
 	end
 
 	if CLIENT then
-		-- These call on bloated convar getting methods and aren't ever used anyway outside of sandbox.
 		hook.Remove("RenderScreenspaceEffects", "RenderColorModify")
 		hook.Remove("RenderScreenspaceEffects", "RenderBloom")
 		hook.Remove("RenderScreenspaceEffects", "RenderToyTown")
@@ -38,11 +31,7 @@ hook.Add("Initialize", "XFTOptimize", function()
 		hook.Remove("Think", "DOFThink")
 		hook.Remove("RenderScreenspaceEffects", "RenderBokeh")
 		hook.Remove("NeedsDepthPass", "NeedsDepthPass_Bokeh")
-
-		-- Useless since we disabled widgets above.
 		hook.Remove("PostDrawEffects", "RenderWidgets")
-
-		-- Could screw with people's point shops but whatever.
 		hook.Remove("PostDrawEffects", "RenderHalos")
 	end
 end)

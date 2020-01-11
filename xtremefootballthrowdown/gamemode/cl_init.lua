@@ -1,13 +1,19 @@
--- Init
+----------
+-- Init --
+----------
 
 include "shared.lua"
 
--- Client
+------------
+-- Client --
+------------
 
 include "language.lua"
 include "hud.lua"
 
--- Shared
+------------
+-- Shared --
+------------
 
 include "item.lua"
 include "state.lua"
@@ -18,3 +24,4 @@ include "teams.lua"
 include "movement.lua"
 include "animation.lua"
 include "footstep.lua"
+include "playermodel.lua"

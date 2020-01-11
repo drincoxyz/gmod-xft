@@ -1,15 +1,28 @@
+------------------
+-- Enumerations --
+------------------
+
 STATE_PRE_MATCH  = 0
 STATE_PRE_ROUND  = 1
 STATE_IN_ROUND   = 2
 STATE_POST_ROUND = 3
 STATE_POST_MATCH = 4
 
+-------------
+-- ConVars --
+-------------
+
+CreateConVar("xft_match_time", 600, FCVAR_NOTIFY + FCVAR_REPLICATED)
+CreateConVar("xft_overtime_time", 300, FCVAR_NOTIFY + FCVAR_REPLICATED)
+CreateConVar("xft_pre_match_time", 30, FCVAR_NOTIFY + FCVAR_REPLICATED)
 CreateConVar("xft_pre_round_time", 3, FCVAR_NOTIFY + FCVAR_REPLICATED)
+CreateConVar("_xft_state", 0, FCVAR_REPLICATED)
+
+---------------
+-- Functions --
+---------------
 
 if SERVER then
-	--
-	-- Starts a new round
-	--
 	function GM:StartRound()
 		self:SetState(STATE_PRE_ROUND)
 		
@@ -25,27 +38,27 @@ if SERVER then
 	end
 end
 
---
--- Returns the current state of the gamemode
---
 function GM:SetState(state)
-	SetGlobalInt("XFTState", state)
+	RunConsoleCommand("_xft_state", math.floor(tonumber(state)))
 end
 
---
--- Returns the current state of the gamemode
---
 function GM:GetState()
-	return GetGlobalInt "XFTState"
+	return cvars.Number "_xft_state"
 end
 
---
--- This is just to make sure the game always starts in pre-match, in case GetGlobalInt doesn't
--- return 0 by default for whatever reason
---
-hook.Add("Initialize", "XFTPreMatch", function()
-	GAMEMODE:SetState(STATE_PRE_MATCH)
-end)
+function GM:GetClock()
+	local matchTime = cvars.Number "xft_match_time"
+	
+	if CurTime() > matchTime then
+		matchTime = matchTime + cvars.Number "xft_overtime_time"
+	end
+
+	return matchTime - CurTime()
+end
+
+-----------
+-- Hooks --
+-----------
 
 --
 -- This will make every other player invisible during the pre-match state

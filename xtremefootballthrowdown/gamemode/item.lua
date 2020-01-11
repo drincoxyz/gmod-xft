@@ -1,9 +1,34 @@
+-------------
+-- ConVars --
+-------------
+
 CreateConVar("xft_item_pickup_cooldown", 1, FCVAR_NOTIFY + FCVAR_REPLICATED)
 CreateConVar("xft_item_drop_cooldown", 1, FCVAR_NOTIFY + FCVAR_REPLICATED)
 
+---------------
+-- Callbacks --
+---------------
+
+function GM:OnPlayerPickedUpItem(pl, item)
+end
+
+function GM:OnPlayerDroppedItem(pl, item)
+end
+
+-----------
+-- Hooks --
+-----------
+
+--
+-- This will declare the ball to the gamemode
+--
+hook.Add("OnEntityCreated", "XFTBall", function(ent)
+	if ent:GetClass() == "xft_item_ball" then GAMEMODE.Ball = ent end
+end)
+
 if SERVER then
 	--
-	-- Allows the player to drop their item
+	-- This allows the player to drop their item
 	--
 	hook.Add("Move", "XFTItemDrop", function(pl, mv)
 		local item = pl:GetItem()
@@ -19,16 +44,45 @@ if SERVER then
 	end)
 end
 
+------------
+-- Player --
+------------
+
 local meta = FindMetaTable "Player"
 
+function meta:SetLastItemDrop(time)
+	self:SetNW2Float("LastItemDrop", time)
+end
+
+function meta:GetLastItemDrop()
+	return self:GetNW2Float "LastItemDrop"
+end
+
+function meta:SetLastItemPickup(time)
+	self:SetNW2Float("LastItemPickup", time)
+end
+
+function meta:GetLastItemPickup()
+	return self:GetNW2Float "LastItemPickup"
+end
+
+function meta:SetItem(ent)
+	self:SetNW2Entity("Item", ent)
+end
+
+function meta:GetItem()
+	return self:GetNW2Entity "Item"
+end
+
 if SERVER then
-	--
-	-- Makes the player pick up a given item
-	--
 	function meta:PickupItem(ent)
+		local item = self:GetItem()
+		
+		if IsValid(item) then return false end
+	
 		local owner = ent:GetOwner()
 		
-		if IsValid(owner) then return end
+		if IsValid(owner) then return false end
 		
 		ent:SetOwner(self)
 		ent:SetLastOwner(self)
@@ -38,15 +92,16 @@ if SERVER then
 		
 		self:SetItem(ent)
 		self:SetLastItemPickup(CurTime())
+		
+		gamemode.Call("OnPlayerPickedUpItem", self, ent)
+		
+		return true
 	end
-	
-	--
-	-- Makes the player drop their item
-	--
+
 	function meta:DropItem()
 		local item = self:GetItem()
 		
-		if not IsValid(item) then return end
+		if not IsValid(item) then return false end
 		
 		item:SetOwner(nil)
 		item:SetParent(nil)
@@ -66,47 +121,9 @@ if SERVER then
 			phys:Wake()
 			phys:SetVelocity(vel)
 		end)
+		
+		gamemode.Call("OnPlayerDroppedItem", self, item)
+		
+		return true
 	end
-end
-
---
--- Sets the last time the player dropped an item
---
-function meta:SetLastItemDrop(time)
-	self:SetNW2Float("LastItemDrop", time)
-end
-
---
--- Returns the last time the player dropped an item
---
-function meta:GetLastItemDrop()
-	return self:GetNW2Float "LastItemDrop"
-end
-
---
--- Sets the last time the player picked up an item
---
-function meta:SetLastItemPickup(time)
-	self:SetNW2Float("LastItemPickup", time)
-end
-
---
--- Returns the last time the player picked up an item
---
-function meta:GetLastItemPickup()
-	return self:GetNW2Float "LastItemPickup"
-end
-
---
--- Sets the item the player is carrying
---
-function meta:SetItem(ent)
-	self:SetNW2Entity("Item", ent)
-end
-
---
--- Returns the item the player is carrying
---
-function meta:GetItem()
-	return self:GetNW2Entity "Item"
 end
