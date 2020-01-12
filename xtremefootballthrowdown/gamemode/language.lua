@@ -1,6 +1,6 @@
----------------
--- Functions --
----------------
+--
+-- Functions
+--
 
 function GM:GetPhrase(phrase)
 	local temp = "xft."..cvars.String "gmod_language".."."..phrase

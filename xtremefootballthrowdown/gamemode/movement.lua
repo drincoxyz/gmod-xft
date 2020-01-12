@@ -19,6 +19,22 @@ function GM:GetLookBehindRate()
 end
 
 --
+-- Name: GM:SetKnockdownCooldown
+-- Desc: Sets the cooldown for being knocked down again.
+--
+function GM:SetKnockdownCooldown(cooldown)
+	SetGlobalFloat("xft_knockdown_cooldown", tonumber(cooldown))
+end
+
+--
+-- Name: GM:GetKnockdownCooldown
+-- Desc: Returns the cooldown for being knocked down again.
+--
+function GM:GetKnockdownCooldown()
+	return GetGlobalFloat "xft_knockdown_cooldown"
+end
+
+--
 -- Name: GM:SetChargeSpeed
 -- Desc: Sets the minimum charging speed.
 --
@@ -140,7 +156,8 @@ end
 -- ConVars
 --
 
-GM:SetLookBehindRate(CreateConVar("xft_look_behind_rate", 8, FCVAR_NOTIFY + FCVAR_REPLICATED):GetFloat())
+GM:SetLookBehindRate(CreateConVar("xft_look_behind_rate", 5, FCVAR_NOTIFY + FCVAR_REPLICATED):GetFloat())
+GM:SetLookBehindRate(CreateConVar("xft_knockdown_cooldown", 2, FCVAR_NOTIFY + FCVAR_REPLICATED):GetFloat())
 GM:SetStrafeSpeed(CreateConVar("xft_strafe_speed", 150, FCVAR_NOTIFY + FCVAR_REPLICATED):GetInt())
 GM:SetChargeSpeed(CreateConVar("xft_charge_speed", 300, FCVAR_NOTIFY + FCVAR_REPLICATED):GetInt())
 GM:SetCrouchSpeed(CreateConVar("xft_crouch_speed", 125, FCVAR_NOTIFY + FCVAR_REPLICATED):GetInt())
@@ -148,6 +165,10 @@ GM:SetMaxSpeed(CreateConVar("xft_max_speed", 350, FCVAR_NOTIFY + FCVAR_REPLICATE
 
 cvars.AddChangeCallback("xft_look_behind_rate", function(cvar, old, new)
 	GAMEMODE:SetLookBehindRate(new)
+end, "Default")
+
+cvars.AddChangeCallback("xft_knockdown_cooldown", function(cvar, old, new)
+	GAMEMODE:SetKnockDownCooldown(new)
 end, "Default")
 
 cvars.AddChangeCallback("xft_strafe_speed", function(cvar, old, new)
@@ -398,6 +419,29 @@ function meta:ShouldLookBehind()
 end
 
 --
+-- Name: Player:GetLookBehindProgress
+-- Desc: Returns the progress for the player looking behind themselves.
+--
+-- Returns
+--
+-- [1] number - Look behind progress.
+--
+function meta:GetLookBehindProgress()
+	local time = CurTime()
+	local rate = GAMEMODE:GetLookBehindRate()
+	local start = self:GetLookBehindStart()
+	local stop = self:GetLookBehindStop()
+
+	if self:LookingBehind() then
+		local x = math.Clamp(1 - (start - stop) * rate, 0, 1)
+		return Lerp(math.EaseInOut(math.Clamp(((time - start) * rate) + x, 0, 1), 0, 1), 0, 1)
+	else
+		local x = math.Clamp(1 - (stop - start) * rate, 0, 1)
+		return Lerp(math.EaseInOut(math.Clamp(((time - stop) * rate) + x, 0, 1), 0, 1), 1, 0)
+	end
+end
+
+--
 -- Name: Player:SetLookBehindStart
 -- Desc: Sets the time the player started looking behind themselves.
 --
@@ -443,4 +487,152 @@ end
 --
 function meta:GetLookBehindStop()
 	return self:GetNW2Float "xft_look_behind_stop"
+end
+
+--
+-- Name: Player:SetKnockedDown
+-- Desc: Sets whether the player is knocked down or not.
+--
+-- Arguments
+--
+-- [1] boolean - Player is knocked down.
+--
+function meta:SetKnockedDown(state)
+	self:SetNW2Bool("xft_knockdown", tobool(state))
+end
+
+--
+-- Name: Player:KnockedDown
+-- Desc: Returns whether the player is knocked down or not.
+--
+-- Returns
+--
+-- [1] boolean - Player is knocked down.
+--
+function meta:KnockedDown()
+	return self:GetNW2Bool "xft_knockdown"
+end
+
+--
+-- Name: Player:SetKnockdownIgnore
+-- Desc: Sets whether the player is ignoring knockdowns or not.
+--
+-- Arguments
+--
+-- [1] boolean - Player is ignoring knockdowns.
+--
+function meta:SetKnockdownIgnore(state)
+	self:SetNW2Bool("xft_knockdown_ignore", tobool(state))
+end
+
+--
+-- Name: Player:IgnoringKnockdown
+-- Desc: Returns whether the player is ignoring knockdowns or not.
+--
+-- Returns
+--
+-- [1] boolean - Player is ignoring knockdowns.
+--
+function meta:IgnoringKnockdown()
+	return self:GetNW2Bool "xft_knockdown_ignore"
+end
+
+
+--
+-- Name: Player:SetKnockdownImmune
+-- Desc: Sets whether the player is immune to knockdowns or not.
+--
+-- Arguments
+--
+-- [1] boolean - Player is immune to knockdowns.
+--
+function meta:SetKnockdownImmune(state)
+	self:SetNW2Bool("xft_knockdown_immune", tobool(state))
+end
+
+--
+-- Name: Player:KnockdownImmune
+-- Desc: Returns whether the player is immune to knockdowns or not.
+--
+-- Returns
+--
+-- [1] boolean - Player is immune to knockdowns.
+--
+function meta:KnockdownImmune()
+	return self:GetNW2Bool "xft_knockdown_immune"
+end
+
+--
+-- Name: Player:SetKnockdownStart
+-- Desc: Sets the time the player started being knocked down.
+--
+-- Arguments
+--
+-- [1] number - Knock down start time.
+--
+function meta:SetKnockdownStart(time)
+	self:SetNW2Float("xft_knock_down_start", tonumber(time))
+end
+
+--
+-- Name: Player:GetKnockdownStart
+-- Desc: Returns the time the player started being knocked down.
+--
+-- Returns
+--
+-- [1] number - Knock down start time.
+--
+function meta:GetKnockdownStart()
+	return self:SetNW2Float "xft_knock_down_start"
+end
+
+--
+-- Name: Player:SetKnockdownStop
+-- Desc: Sets the time the player stopped being knocked down.
+--
+-- Arguments
+--
+-- [1] number - Knock down start time.
+--
+function meta:SetKnockdownStop(time)
+	self:SetNW2Float("xft_knock_down_stop", tonumber(time))
+end
+
+--
+-- Name: Player:GetKnockdownStop
+-- Desc: Returns the time the player stopped being knocked down.
+--
+-- Returns
+--
+-- [1] number - Knock down start time.
+--
+function meta:GetKnockdownStop()
+	return self:SetNW2Float "xft_knock_down_stop"
+end
+
+if SERVER then
+	--
+	-- Name: Player:Knockdown
+	-- Desc: Knocks down another player.
+	--
+	-- Arguments
+	--
+	-- [1] Player  - Victim to knock down. Leave blank to knock down the attacker themselves.
+	-- [2] Vector  - Amount of force to apply to the victim. Leave blank to use the attacker's velocity.
+	-- [3] number  - Amount of damage to apply to the victim. Leave blank to not damage the victim.
+	-- [4] boolean - Ignores fair knock down logic.
+	--
+	-- Returns
+	--
+	-- [1] boolean - Victim was successfully hit by the knockdown. Can be false if the victim is ignoring knockdowns.
+	-- [2] boolean - Victim was successfully knocked down. Can be false if the victim is immune to knockdowns.
+	--
+	function meta:Knockdown(pl, vel, dmg, force)
+		local pl = pl or self
+		
+		if pl:KnockdownImmune() then return end
+		
+		local vel = vel or self:GetVelocity()
+		local dmg = dmg or 0
+	end
 end

@@ -33,3 +33,9 @@ hook.Add("CalcMainActivity", "xft_base", function(pl, vel)
 	
 	return act, seq
 end)
+
+--
+-- Player
+--
+
+local meta = FindMetaTable "Player"

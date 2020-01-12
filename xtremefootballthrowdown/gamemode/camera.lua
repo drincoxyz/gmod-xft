@@ -92,9 +92,9 @@ hook.Add("CalcView", "xft_pre_match", function(pl, pos, ang, fov)
 end)
 
 hook.Add("CalcView", "xft_look_behind", function(pl, pos, ang, fov)
-	local lookBehindAng = pl:GetLookBehindAngle()
+	local prog = pl:GetLookBehindProgress()
 	
-	ang:RotateAroundAxis(Vector(0, 0, 1), lookBehindAng.y)
+	ang:RotateAroundAxis(Vector(0, 0, 1), prog * -179.99)
 end)
 
 hook.Add("CalcView", "xft_base", function(pl, pos, ang, fov)
@@ -119,35 +119,3 @@ hook.Add("CalcView", "xft_base", function(pl, pos, ang, fov)
 		drawviewer = true,
 	}
 end)
-
---
--- Players
---
-
-local meta = FindMetaTable "Player"
-
---
--- Name: GetLookBehindAngle
--- Desc: Returns the angle for the player looking behind themselves.
---
--- Returns
---
--- [1] Angle - Look behind angle.
---
-function meta:GetLookBehindAngle()
-	local time = CurTime()
-	local rate = GAMEMODE:GetLookBehindRate()
-	local start = self:GetLookBehindStart()
-	local stop = self:GetLookBehindStop()
-	local yaw = 0
-
-	if self:LookingBehind() then
-		local x = math.Clamp(1 - (start - stop) * rate, 0, 1)
-		yaw = Lerp(math.EaseInOut(math.Clamp(((time - start) * rate) + x, 0, 1), 0, 1), 0, -179.99)
-	else
-		local x = math.Clamp(1 - (stop - start) * rate, 0, 1)
-		yaw = Lerp(math.EaseInOut(math.Clamp(((time - stop) * rate) + x, 0, 1), 0, 1), -179.99, 0)
-	end
-	
-	return Angle(0, yaw, 0)
-end

@@ -1,6 +1,7 @@
 AddCSLuaFile()
 
 ENT.Type       = "anim"
+ENT.Name       = "Base"
 ENT.Model      = "models/roller.mdl"
 ENT.Physics    = SOLID_VPHYSICS
 ENT.Mins       = Vector(-4, -4, -4)
@@ -45,7 +46,8 @@ end
 
 if SERVER then
 	--
-	-- Builds the item's physics object
+	-- Name: ENT:BuildPhysics
+	-- Desc: Builds the item's physics object.
 	--
 	function ENT:BuildPhysics()
 		if self.Physics == SOLID_VPHYSICS then
@@ -58,32 +60,64 @@ if SERVER then
 			phys:Wake()
 		end
 	end
+elseif CLIENT then
+	--
+	-- Name: ENT:GetTranslatedName
+	-- Desc: Attempts to return the translated version of the item's name.
+	--
+	-- Return
+	--
+	-- [1] string - The item's translated name.
+	--
+	function ENT:GetTranslatedName()
+		return GAMEMODE:GetPhrase(self.Name)
+	end
 end
 
 --
--- Sets the last owner of the item
+-- Name: ENT:SetLastOwner
+-- Desc: Sets the last player to own the item.
 --
-function ENT:SetLastOwner(ent)
-	self:SetNW2Entity("LastOwner", ent)
+-- Arguments
+--
+-- [1] Player - Previous owner.
+--
+function ENT:SetLastOwner(pl)
+	self:SetNW2Entity("xft_last_owner", pl)
 end
 
 --
--- Returns the last owner of the item
+-- Name: ENT:GetLastOwner
+-- Desc: Returns the last player to own the item.
+--
+-- Returns
+--
+-- [1] Player - Previous owner.
 --
 function ENT:GetLastOwner()
-	return self:GetNW2Entity "LastOwner"
+	return self:GetNW2Entity "xft_last_owner"
 end
 
 --
--- Sets the last time the item was picked up
+-- Name: ENT:SetLastPickup
+-- Desc: Sets the last time the item was picked up.
+--
+-- Arguments
+--
+-- [1] number - Last pickup time.
 --
 function ENT:SetLastPickup(time)
-	self:SetNW2Float("LastPickup", time)
+	self:SetNW2Float("xft_last_pickup", tonumber(time))
 end
 
 --
--- Returns the last time the item was picked up
+-- Name: ENT:GetLastPickup
+-- Desc: Returns the last time the item was picked up.
+--
+-- Returns
+--
+-- [1] number - Last pickup time.
 --
 function ENT:GetLastPickup()
-	return self:GetNW2Float "LastPickup"
+	return self:GetNW2Float "xft_last_pickup"
 end
