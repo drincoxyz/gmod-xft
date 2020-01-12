@@ -1,12 +1,12 @@
----------------
--- Variables --
----------------
+--
+-- Variables
+--
 
 GM.SpawnPoints = GM.SpawnPoints or {}
 
----------------
--- Functions --
----------------
+--
+-- Functions
+--
 
 function GM:PlayerInitialSpawn(pl)
 	pl:SetTeam(TEAM_SPECTATE)
@@ -15,14 +15,12 @@ end
 
 function GM:PlayerSpawn(pl)
 	local id = pl:Team()
-	local mdl = player_manager.TranslatePlayerModel(pl:GetInfo "cl_playermodel")
 	local maxSpeed = cvars.Number "xft_max_speed"
 	local col = team.GetColor(id)
 	
 	pl:SetJumpPower(200)
 	pl:SetCanWalk(false)
 	pl:AllowFlashlight(false)
-	pl:SetModel(mdl)
 	pl:SetPlayerColor(col:ToVector())
 	
 	if id == TEAM_SPECTATE then

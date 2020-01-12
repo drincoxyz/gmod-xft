@@ -157,7 +157,7 @@ end
 --
 
 GM:SetLookBehindRate(CreateConVar("xft_look_behind_rate", 5, FCVAR_NOTIFY + FCVAR_REPLICATED):GetFloat())
-GM:SetLookBehindRate(CreateConVar("xft_knockdown_cooldown", 2, FCVAR_NOTIFY + FCVAR_REPLICATED):GetFloat())
+GM:SetKnockdownCooldown(CreateConVar("xft_knockdown_cooldown", 2, FCVAR_NOTIFY + FCVAR_REPLICATED):GetFloat())
 GM:SetStrafeSpeed(CreateConVar("xft_strafe_speed", 150, FCVAR_NOTIFY + FCVAR_REPLICATED):GetInt())
 GM:SetChargeSpeed(CreateConVar("xft_charge_speed", 300, FCVAR_NOTIFY + FCVAR_REPLICATED):GetInt())
 GM:SetCrouchSpeed(CreateConVar("xft_crouch_speed", 125, FCVAR_NOTIFY + FCVAR_REPLICATED):GetInt())

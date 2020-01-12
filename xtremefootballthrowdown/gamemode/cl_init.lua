@@ -9,6 +9,7 @@ include "shared.lua"
 --
 
 include "language.lua"
+include "feed.lua"
 include "hud.lua"
 
 --
@@ -19,10 +20,11 @@ include "item.lua"
 include "state.lua"
 include "goal.lua"
 include "camera.lua"
+include "health.lua"
 include "optimize.lua"
 include "teams.lua"
 include "movement.lua"
 include "animation.lua"
 include "footstep.lua"
 include "announcer.lua"
-include "playermodel.lua"
+include "characters.lua"

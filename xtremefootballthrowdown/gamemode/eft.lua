@@ -1,11 +1,8 @@
------------
--- Hooks --
------------
+--
+-- Hooks
+--
 
---
--- Replace the old `info_player_` spawnpoints with the new `xft_player_spawn`
---
-hook.Add("OnEntityCreated", "EFTSpawnPoints", function(ent)
+hook.Add("OnEntityCreated", "eft_spawn_points", function(ent)
 	local class = ent:GetClass()
 
 	if class:find "info_player_" then
@@ -30,10 +27,7 @@ hook.Add("OnEntityCreated", "EFTSpawnPoints", function(ent)
 	end
 end)
 
---
--- Replace the old `trigger_goal` with the new `xft_goal`
---
-hook.Add("OnEntityCreated", "EFTGoals", function(ent)
+hook.Add("OnEntityCreated", "eft_goals", function(ent)
 	local class = ent:GetClass()
 
 	if class == "trigger_goal" then
@@ -55,10 +49,26 @@ hook.Add("OnEntityCreated", "EFTGoals", function(ent)
 	end
 end)
 
---
--- Replace the old `prop_carry_` items with the new `xft_item_`
---
-hook.Add("OnEntityCreated", "EFTItems", function(ent)
+hook.Add("OnEntityCreated", "eft_ball_resets", function(ent)
+	local class = ent:GetClass()
+
+	if class == "trigger_ballreset" then
+		local reset = ents.Create "xft_ball_reset"
+		
+		if IsValid(reset) then
+			timer.Simple(0, function()
+				reset:SetPos(ent:GetPos())
+				reset:SetAngles(ent:GetAngles())
+				reset:SetParent(ent:GetParent())
+				reset:SetBrushModel(ent:GetBrushModel())
+				reset:Spawn()
+				ent:Remove()
+			end)
+		end
+	end
+end)
+
+hook.Add("OnEntityCreated", "eft_items", function(ent)
 	local class = ent:GetClass()
 
 	if class == "prop_ball" then

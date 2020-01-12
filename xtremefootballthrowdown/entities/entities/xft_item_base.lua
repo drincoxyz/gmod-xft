@@ -14,6 +14,7 @@ ENT.Attachment = "anim_attachment_RH"
 function ENT:Initialize()
 	self:DrawShadow(true)
 	self:SetModel(self.Model)
+	self:SetSpawnPos(self:GetPos())
 	
 	if SERVER then
 		self:BuildPhysics()
@@ -39,7 +40,7 @@ function ENT:Touch(ent)
 	local lastDrop = ent:GetLastItemDrop()
 	local time = CurTime()
 
-	if time < lastDrop + cvars.Number "xft_item_pickup_cooldown" then return end
+	if time < lastDrop + GAMEMODE:GetItemPickupCooldown() then return end
 	
 	ent:PickupItem(self)
 end
@@ -72,6 +73,30 @@ elseif CLIENT then
 	function ENT:GetTranslatedName()
 		return GAMEMODE:GetPhrase(self.Name)
 	end
+end
+
+--
+-- Name: ENT:SetSpawnPos
+-- Desc: Sets the item's spawn position.
+--
+-- Arguments
+--
+-- [1] Vector - Spawn position.
+--
+function ENT:SetSpawnPos(pos)
+	self:SetNW2Vector("xft_spawn_pos", pos)
+end
+
+--
+-- Name: ENT:GetSpawnPos
+-- Desc: Returns the item's spawn position.
+--
+-- Arguments
+--
+-- [1] Vector - Spawn position.
+--
+function ENT:GetSpawnPos()
+	return self:GetNW2Vector "xft_spawn_pos"
 end
 
 --

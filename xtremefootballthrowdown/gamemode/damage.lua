@@ -1,6 +1,10 @@
----------------
--- Functions --
----------------
+--
+-- Functions
+--
+
+function GM:PlayerDeathSound()
+	return true
+end
 
 function GM:GetFallDamage(pl, speed)
 	local pos = pl:GetPos()
