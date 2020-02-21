@@ -1,5 +1,5 @@
 local conf = {
-	dir = GM.FolderName..'/hud/',
+	dir = GM.FolderName..'/gamemode/hud/',
 
 	whitelist = {
 		CHudChat = true,

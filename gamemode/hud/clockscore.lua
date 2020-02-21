@@ -62,9 +62,19 @@ language.Add('clockscore_inround', {
 	fr = 'Temps Restant',
 })
 
-language.Add('clockscore_preround', {
+language.Add('clockscore_prematch', {
 	en = 'Waiting',
 	fr = 'Attendre',
+})
+
+language.Add('clockscore_preround', {
+	en = 'Starting',
+	fr = 'Début',
+})
+
+language.Add('clockscore_postround', {
+	en = 'Touchdown!',
+	fr = 'Atterrissage!',
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -155,12 +165,21 @@ return function(pl, lerp)
 		draw.SimpleText(min, conf.clock.font, -30-lerp*2, -60, conf.clock.col.fg, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 		draw.SimpleText(':', conf.clock.font, -lerp*2, -60, conf.clock.col.fg, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-		local stage = GAMEMODE:GetStage()
+		local stage  = GAMEMODE:GetStage()
+		local phrase = ''
 	
 		if stage == STAGE_PRE_MATCH then
-			draw.SimpleText(language.GetPhrase 'clockscore_preround', 'hud_stage', -lerp*2, 90, conf.clock.col.fg, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)			
+			phrase = language.GetPhrase 'clockscore_prematch'
+		elseif stage == STAGE_PRE_MATCH then
+			phrase = language.GetPhrase 'clockscore_prematch'
+		elseif stage == STAGE_PRE_ROUND then
+			phrase = language.GetPhrase 'clockscore_preround'
 		elseif stage == STAGE_IN_ROUND then
-			draw.SimpleText(language.GetPhrase 'clockscore_inround', 'hud_stage', -lerp*2, 90, conf.clock.col.fg, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			phrase = language.GetPhrase 'clockscore_inround'
+		elseif stage == STAGE_POST_ROUND then
+			phrase = language.GetPhrase 'clockscore_postround'
 		end
+		
+		draw.SimpleText(phrase, 'hud_stage', -lerp*2, 90, conf.clock.col.fg, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	cam.End3D2D()
 end

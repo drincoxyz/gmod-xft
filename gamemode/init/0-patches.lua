@@ -1,5 +1,5 @@
 local conf = {
-	dir = GM.FolderName..'/patches/',
+	dir = GM.FolderName..'/gamemode/patches/',
 }
 
 for i, script in ipairs(file.Find(conf.dir..'*.lua', 'LUA')) do
