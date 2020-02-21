@@ -1,0 +1,6 @@
+"xft"
+{
+	"title"      "Xtreme Football Throwdown"
+	"maps"       "^xft_"
+	"menusystem" "1"
+}

@@ -1,3 +1,0 @@
-[submodule ".lib/LuaObfuscator"]
-	path = .lib/LuaObfuscator
-	url = https://github.com/jkusner/LuaObfuscator
