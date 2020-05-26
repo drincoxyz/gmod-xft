@@ -1,7 +1,0 @@
-"xft"
-{
-	"title"      "Xtreme Football Throwdown"
-	"maps"       "^xft_"
-	"menusystem" "1"
-	"workshopid" "2003728735"
-}
